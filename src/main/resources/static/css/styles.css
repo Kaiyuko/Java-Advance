@@ -1,0 +1,69 @@
+/* styles.css */
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: Arial, sans-serif; /* Thêm font-family cho body */
+    background-color: #f0f0f0; /* Màu nền cho body */
+}
+
+h1 {
+    color: white;
+    background-color: #3FA2F6;
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+form {
+    width: 80%; /* Độ rộng của form */
+    max-width: 600px; /* Giới hạn độ rộng tối đa của form */
+    padding: 25px;
+    border: 5px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+form input, form textarea, form select {
+    width: 100%; /* Độ rộng của các input, textarea và select */
+    padding: 10px;
+    margin-bottom: 10px;
+    font-size: 1.4rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* Đảm bảo padding và border được tính vào kích thước tổng */
+}
+
+button[type=submit] {
+    font-size: 1.4rem;
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    float: right; /* Căn nút sang phải */
+}
+
+button[type=submit]:hover {
+    background-color: #45a049;
+}
+
+/* Để cho select box trùng với các phần tử input khác */
+select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    font-size: 1.4rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+label{
+    font-size: 1.2rem;
+    font-weight: bold;
+}
