@@ -13,6 +13,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/products")
 public class ProductController {
@@ -97,4 +99,18 @@ public class ProductController {
         model.addAttribute("product", product);
         return "/products/product-detail";
     }
+
+    @GetMapping("/filter")
+    public String filterProductsByPrice(Model model,
+                                        @RequestParam(name = "minPrice", required = false) Double minPrice,
+                                        @RequestParam(name = "maxPrice", required = false) Double maxPrice) {
+
+        List<Product> products = productService.findByPriceRange(minPrice, maxPrice);
+
+        model.addAttribute("products", products);
+        model.addAttribute("categories", categoryService.getAllCategories());
+
+        return "/products/products-list";
+    }
+
 }

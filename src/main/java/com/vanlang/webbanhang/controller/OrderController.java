@@ -30,32 +30,70 @@ public class OrderController {
     }
 
     @PostMapping("/submit")
-    public String submitOrder(@RequestParam String customerName, @RequestParam String address, @RequestParam String phone,
-                              @RequestParam String email, @RequestParam String note, @RequestParam String paymentMethod,
-                              @RequestParam String deliveryDate) {
+    public String submitOrder(@RequestParam String customerName,
+                              @RequestParam String address,
+                              @RequestParam String phone,
+                              @RequestParam String email,
+                              @RequestParam String note,
+                              @RequestParam String paymentMethod,
+                              @RequestParam String deliveryDate,
+                              Model model) {
         List<CartItem> cartItems = cartService.getCartItems();
         if (cartItems.isEmpty()) {
             return "redirect:/cart"; // Redirect if cart is empty
         }
 
-        // Parse the deliveryDate to LocalDate
-        LocalDate parsedDeliveryDate = LocalDate.parse(deliveryDate);
+        try {
+            // Parse the deliveryDate to LocalDate
+            LocalDate parsedDeliveryDate = LocalDate.parse(deliveryDate);
 
-        // Create order
-        Order order = new Order();
-        order.setCustomerName(customerName);
-        order.setAddress(address);
-        order.setPhone(phone);
-        order.setEmail(email);
-        order.setNote(note);
-        order.setPaymentMethod(paymentMethod);
-        order.setDeliveryDate(parsedDeliveryDate);
+            // Create order
+            Order order = new Order();
+            order.setCustomerName(customerName);
+            order.setAddress(address);
+            order.setPhone(phone);
+            order.setEmail(email);
+            order.setNote(note);
+            order.setPaymentMethod(paymentMethod);
+            order.setDeliveryDate(parsedDeliveryDate);
 
-        // Save order and order details
-        orderService.createOrder(order, cartItems);
+            // Save order and order details
+            orderService.createOrder(order, cartItems);
 
-        return "redirect:/order/confirmation";
+            // Tính toán phí giao hàng (ví dụ đơn giản)
+            int deliveryFee = calculateDeliveryFee(parsedDeliveryDate);
+
+            // Truyền dữ liệu vào model để hiển thị trên trang order-confirmation.html
+            model.addAttribute("deliveryDate", parsedDeliveryDate);
+            model.addAttribute("deliveryFee", deliveryFee);
+            model.addAttribute("message", "Your order has been successfully placed.");
+            model.addAttribute("deliveryMessage", "Your selected delivery date is: " + parsedDeliveryDate);
+
+            return "cart/order-confirmation"; // Trả về tên view order-confirmation.html
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "redirect:/order/checkout"; // Redirect if there's an error
+        }
     }
+
+    private int calculateDeliveryFee(LocalDate deliveryDate) {
+        // Lấy ngày hiện tại
+        LocalDate currentDate = LocalDate.now();
+
+        // Tính số ngày giữa ngày hiện tại và ngày giao hàng
+        long daysBetween = java.time.temporal.ChronoUnit.DAYS.between(currentDate, deliveryDate);
+
+        // Tính phí giao hàng dựa trên số ngày
+        if (daysBetween <= 3) {
+            return 10; // Giao hàng trong vòng 3 ngày: phí là 10
+        } else if (daysBetween <= 5) {
+            return 5; // Giao hàng trong vòng 5 ngày: phí là 5
+        } else {
+            return 0; // Giao hàng sau 7 ngày: không có phí
+        }
+    }
+
+
 
     @GetMapping("/confirmation")
     public String orderConfirmation(Model model) {

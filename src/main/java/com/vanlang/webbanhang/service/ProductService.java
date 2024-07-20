@@ -66,4 +66,15 @@ public class ProductService {
     public Page<Product> getAllProducts(Pageable pageable) {
         return productRepository.findAll(pageable);
     }
+
+    // Thêm phương thức lọc sản phẩm theo phạm vi giá
+    public List<Product> findByPriceRange(Double minPrice, Double maxPrice) {
+        if (minPrice == null) {
+            minPrice = 0.0;
+        }
+        if (maxPrice == null) {
+            maxPrice = Double.MAX_VALUE;
+        }
+        return productRepository.findByPriceBetween(minPrice, maxPrice);
+    }
 }
